@@ -9,11 +9,11 @@ main =
 -- MODEL
 
 type alias Model =
-  { light : Int }
+  { light : Bool }
 
 model : Model
 model =
-  Model 0
+  Model False
 
 -- UPDATE
 
@@ -23,10 +23,10 @@ update: Msg -> Model -> Model
 update msg model =
   case msg of
     Toggle ->
-      if model.light == 1 then
-         { model | light = 0 }
+      if model.light then
+         { model | light = False }
       else
-         { model | light = 1 }
+         { model | light = True }
 
 -- VIEW
 
@@ -36,6 +36,6 @@ view model =
     button [onClick Toggle] [text <| displayLight model.light]
   ]
 
-displayLight : Int -> String
+displayLight : Bool -> String
 displayLight state =
-  if state == 0 then "Off" else "On!"
+  if state then "Off" else "On!"
