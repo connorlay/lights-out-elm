@@ -1,16 +1,18 @@
 {
-  "name": "magical-cards",
+  "name": "lights-out-elm",
   "version": "0.1.0",
-  "description": "An app to play Magic: The Gathering",
+  "description": "An app to play Lights Out!",
   "main": "main.js",
   "dependencies": {},
   "devDependencies": {
     "electron": "^1.4.6",
-    "elm": "^0.18.0"
+    "elm": "^0.18.0",
+    "elm-test": "^0.18.0"
   },
   "scripts": {
     "start": "electron .",
-    "build": "elm make ./src/Main.elm --output ./build/elm.js"
+    "build": "elm make ./src/LightsOut.elm --output ./build/elm.js",
+    "test": "elm test"
   },
   "repository": {
     "type": "git",
@@ -20,10 +22,6 @@
     "mtg",
     "electron"
   ],
-  "author": "Connor Lay, Maggie Dreyer",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/connorlay/magical-cards/issues"
-  },
-  "homepage": "https://github.com/connorlay/magical-cards#readme"
-}
+  "author": "Connor Lay",
+  "license": "ISC"
+  }
