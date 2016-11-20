@@ -2,9 +2,9 @@ port module LightsOut exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (..)
-import Array exposing (..)
-import Set exposing (..)
-import Maybe exposing (..)
+import Array exposing (repeat, get, set, Array)
+import Set exposing (foldl, map, fromList, Set)
+import Maybe exposing (withDefault)
 
 main =
   beginnerProgram { model = model 4, view = view, update = update }
@@ -21,8 +21,8 @@ model : Int -> Model
 model n =
   {
     grid = False
-     |> Array.repeat n
-     |> Array.repeat n
+     |> repeat n
+     |> repeat n
   }
 
 -- UPDATE
@@ -44,29 +44,29 @@ update msg model =
 
 updateGrid : Grid -> Set Coord -> Grid
 updateGrid grid coords =
-  Set.foldl toggle grid coords
+  foldl toggle grid coords
 
 toToggle : Coord -> Set Coord
 toToggle (r1, c1) =
   [ (0, 0), (1, 0), (-1, 0), (0, 1), (0, -1) ]
-  |> Set.fromList
+  |> fromList
   |> Set.map (\(r2, c2) -> (r1 + r2, c1 + c2))
 
 toggle : Coord -> Grid -> Grid
 toggle (r, c) grid =
   let
     toggled = grid
-            |> Array.get r
+            |> get r
             |> withDefault Array.empty
-            |> Array.get c
+            |> get c
             |> withDefault False
             |> not
     row = grid
-          |> Array.get r
+          |> get r
           |> withDefault Array.empty
-          |> Array.set c toggled
+          |> set c toggled
   in
-    Array.set r row grid
+    set r row grid
 
 -- VIEW
 
