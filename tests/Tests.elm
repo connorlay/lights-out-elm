@@ -32,19 +32,23 @@ all =
              Expect.true "Expected an NxN grid" <| List.all ((==) n) [xLen, yLen]
       ],
 
-    describe "Finding neighbors of a cell"
-      [ test "Light and neighbors should toggle based on coordinates" <|
+    describe "Finding cells to toggle"
+      [ test "A set of coords to toggle should be returned" <|
         \() ->
           let
-             expected = Set.fromList [ (0, 1), (1, 0), (2, 1), (1, 2) ]
+             expected = Set.fromList [ (1, 1), (0, 1), (1, 0), (2, 1), (1, 2) ]
           in
-             Expect.equal expected <| LightsOut.neighbors (1, 1)
+             Expect.equal expected <| LightsOut.toToggle (1, 1)
       ],
 
-    describe "Updating the model"
-      [ test "Light and neighbors should toggle based on coordinates" <|
+    describe "Toggling cells in a grid"
+      [ test "Cells should toggle based on coords in set" <|
         \() ->
           let
+            coords = Set.fromList [ (1, 1), (0, 1), (1, 0), (2, 1), (1, 2) ]
+            grid = 4
+                 |> LightsOut.model
+                 |> .grid
             expected = [
                    [ False, True,  False, False ],
                    [ True,  True,  True,  False ],
@@ -53,6 +57,6 @@ all =
                    |> List.map (Array.fromList)
                    |> Array.fromList
           in
-             Expect.true "Expected 5 squares to toggle" False
+            Expect.equal expected <| LightsOut.updateGrid grid coords
        ]
      ]
