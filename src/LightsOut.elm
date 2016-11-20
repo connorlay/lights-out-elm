@@ -3,7 +3,7 @@ port module LightsOut exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Array exposing (repeat, get, set, Array, toIndexedList)
+import Array exposing (get, set, Array, toIndexedList)
 import Set exposing (foldl, fromList, Set)
 import Maybe exposing (withDefault)
 
@@ -20,7 +20,7 @@ type alias Model =
 
 model : Int -> Model
 model n =
-  { grid = False |> repeat n |> repeat n }
+  { grid = False |> Array.repeat n |> Array.repeat n }
 
 -- UPDATE
 
@@ -34,12 +34,7 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     (_, _) ->
-      let
-        grid = msg
-        |> neighbors
-        |> updateGrid model.grid
-      in
-        { model | grid = grid }
+      { model | grid = updateGrid model.grid (neighbors msg) }
 
 updateGrid : Grid -> Set Coord -> Grid
 updateGrid grid coords =
@@ -54,18 +49,21 @@ neighbors (r1, c1) =
 toggle : Coord -> Grid -> Grid
 toggle (r, c) grid =
   let
-    toggled = grid
-            |> get r
-            |> withDefault Array.empty
-            |> get c
-            |> withDefault False
-            |> not
+    toggled = getElement (r, c) grid |> not
     row = grid
           |> get r
           |> withDefault Array.empty
           |> set c toggled
   in
     set r row grid
+
+getElement : Coord -> Grid -> Bool
+getElement (r, c) grid =
+  grid
+  |> get r
+  |> withDefault Array.empty
+  |> get c
+  |> withDefault False
 
 -- VIEW
 
