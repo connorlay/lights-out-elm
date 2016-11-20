@@ -58,5 +58,22 @@ all =
                    |> Array.fromList
           in
             Expect.equal expected <| LightsOut.updateGrid grid coords
+       , test "Cells out of bounds should not toggle" <|
+         \() ->
+            let
+              coords = Set.fromList [ (3, 3), (2, 3), (3, 2), (3, 4), (4, 3) ]
+              grid = 4
+                   |> LightsOut.model
+                   |> .grid
+              expected = [
+                     [ False, False, False, False ],
+                     [ False, False, False, False ],
+                     [ False, False, False, True  ],
+                     [ False, False, True,  True  ] ]
+                     |> List.map (Array.fromList)
+                     |> Array.fromList
+            in
+              Expect.equal expected <| LightsOut.updateGrid grid coords
        ]
-     ]
+      ]
+

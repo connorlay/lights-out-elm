@@ -72,4 +72,4 @@ toggle (r, c) grid =
 
 view : Model -> Html Msg
 view model =
-  text "Hello World"
+  text "Hello World!"
