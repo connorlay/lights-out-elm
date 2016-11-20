@@ -38,7 +38,7 @@ all =
           let
              expected = Set.fromList [ (1, 1), (0, 1), (1, 0), (2, 1), (1, 2) ]
           in
-             Expect.equal expected <| LightsOut.toToggle (1, 1)
+             Expect.equal expected <| LightsOut.neighbors (1, 1)
       ],
 
     describe "Toggling cells in a grid"

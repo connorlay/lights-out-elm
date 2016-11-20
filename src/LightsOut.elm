@@ -1,9 +1,10 @@
 port module LightsOut exposing (..)
 
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Array exposing (repeat, get, set, Array)
-import Set exposing (foldl, map, fromList, Set)
+import Array exposing (repeat, get, set, Array, toIndexedList)
+import Set exposing (foldl, fromList, Set)
 import Maybe exposing (withDefault)
 
 main =
@@ -19,11 +20,7 @@ type alias Model =
 
 model : Int -> Model
 model n =
-  {
-    grid = False
-     |> repeat n
-     |> repeat n
-  }
+  { grid = False |> repeat n |> repeat n }
 
 -- UPDATE
 
@@ -35,19 +32,21 @@ type alias Msg =
 
 update : Msg -> Model -> Model
 update msg model =
-  let
-    grid = msg
-    |> toToggle
-    |> updateGrid model.grid
-  in
-    { model | grid = grid }
+  case msg of
+    (_, _) ->
+      let
+        grid = msg
+        |> neighbors
+        |> updateGrid model.grid
+      in
+        { model | grid = grid }
 
 updateGrid : Grid -> Set Coord -> Grid
 updateGrid grid coords =
   foldl toggle grid coords
 
-toToggle : Coord -> Set Coord
-toToggle (r1, c1) =
+neighbors : Coord -> Set Coord
+neighbors (r1, c1) =
   [ (0, 0), (1, 0), (-1, 0), (0, 1), (0, -1) ]
   |> fromList
   |> Set.map (\(r2, c2) -> (r1 + r2, c1 + c2))
@@ -77,16 +76,16 @@ view model =
 asHtml : Grid -> List (Html Msg)
 asHtml grid =
   grid
-  |> Array.toIndexedList
+  |> toIndexedList
   |> List.foldr (\row acc -> (rowAsHtml row) :: acc) []
 
 rowAsHtml : (Int, Array Bool) -> Html Msg
 rowAsHtml (r, row) =
   row
-  |> Array.toIndexedList
-  |> List.foldr (\(c, e) acc -> button [onClick (r, c)] [text <| stateToText e] :: acc) []
+  |> toIndexedList
+  |> List.foldr (\(c, e) acc -> button [onClick (r, c), style [ ("backgroundColor", stateToColor e) ] ] [text "Click Me!"] :: acc) []
   |> div []
 
-stateToText : Bool -> String
-stateToText state =
-  if state then "On" else "Off"
+stateToColor : Bool -> String
+stateToColor state =
+  if state then "red" else "gray"
