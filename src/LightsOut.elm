@@ -72,4 +72,21 @@ toggle (r, c) grid =
 
 view : Model -> Html Msg
 view model =
-  text "Hello World!"
+  div [] <| asHtml model.grid
+
+asHtml : Grid -> List (Html Msg)
+asHtml grid =
+  grid
+  |> Array.toIndexedList
+  |> List.foldr (\row acc -> (rowAsHtml row) :: acc) []
+
+rowAsHtml : (Int, Array Bool) -> Html Msg
+rowAsHtml (r, row) =
+  row
+  |> Array.toIndexedList
+  |> List.foldr (\(c, e) acc -> button [onClick (r, c)] [text <| stateToText e] :: acc) []
+  |> div []
+
+stateToText : Bool -> String
+stateToText state =
+  if state then "On" else "Off"
