@@ -76,4 +76,3 @@ all =
               Expect.equal expected <| LightsOut.updateGrid grid coords
        ]
       ]
-

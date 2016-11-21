@@ -3,12 +3,17 @@ port module LightsOut exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Array exposing (get, set, Array, toIndexedList)
-import Set exposing (foldl, fromList, Set)
-import Maybe exposing (withDefault)
+import Array exposing (..)
+import Set exposing (..)
+import Maybe exposing (..)
 
 main =
-  beginnerProgram { model = model 4, view = view, update = update }
+  program
+  { init = init
+  , view = view
+  , update = update
+  , subscriptions = subscriptions
+  }
 
 -- MODEL
 
@@ -22,6 +27,10 @@ model : Int -> Model
 model n =
   { grid = False |> Array.repeat n |> Array.repeat n }
 
+init : (Model, Cmd Msg)
+init =
+  (model 4, Cmd.none)
+
 -- UPDATE
 
 type alias Coord =
@@ -30,20 +39,20 @@ type alias Coord =
 type alias Msg =
   Coord
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     (_, _) ->
-      { model | grid = updateGrid model.grid (neighbors msg) }
+      ( { model | grid = updateGrid model.grid (neighbors msg) }, Cmd.none )
 
 updateGrid : Grid -> Set Coord -> Grid
 updateGrid grid coords =
-  foldl toggleCell grid coords
+  Set.foldl toggleCell grid coords
 
 neighbors : Coord -> Set Coord
 neighbors (row, col) =
   [ (0, 0), (1, 0), (-1, 0), (0, 1), (0, -1) ]
-  |> fromList
+  |> Set.fromList
   |> Set.map (\(row_, col_) -> (row + row_, col + col_))
 
 toggleCell : Coord -> Grid -> Grid
@@ -90,3 +99,9 @@ cellAsHtml coord state =
     onClick coord,
     style [ ("backgroundColor", if state then "red" else "gray") ]
   ] [ text "Click Me!" ]
+
+-- SUBSCRIPTIONS
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.none
