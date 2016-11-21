@@ -38,52 +38,55 @@ update msg model =
 
 updateGrid : Grid -> Set Coord -> Grid
 updateGrid grid coords =
-  foldl toggle grid coords
+  foldl toggleCell grid coords
 
 neighbors : Coord -> Set Coord
-neighbors (r1, c1) =
+neighbors (row, col) =
   [ (0, 0), (1, 0), (-1, 0), (0, 1), (0, -1) ]
   |> fromList
-  |> Set.map (\(r2, c2) -> (r1 + r2, c1 + c2))
+  |> Set.map (\(row_, col_) -> (row + row_, col + col_))
 
-toggle : Coord -> Grid -> Grid
-toggle (r, c) grid =
+toggleCell : Coord -> Grid -> Grid
+toggleCell (row, col) grid =
   let
-    toggled = getElement (r, c) grid |> not
-    row = grid
-          |> get r
+    toggleCelld = getElement (row, col) grid |> not
+    cells = grid
+          |> get row
           |> withDefault Array.empty
-          |> set c toggled
+          |> set col toggleCelld
   in
-    set r row grid
+    set row cells grid
 
 getElement : Coord -> Grid -> Bool
-getElement (r, c) grid =
+getElement (row, col) grid =
   grid
-  |> get r
+  |> get row
   |> withDefault Array.empty
-  |> get c
+  |> get col
   |> withDefault False
 
 -- VIEW
 
 view : Model -> Html Msg
 view model =
-  div [] <| asHtml model.grid
+  div [] <| gridAsHtml model.grid
 
-asHtml : Grid -> List (Html Msg)
-asHtml grid =
+gridAsHtml : Grid -> List (Html Msg)
+gridAsHtml grid =
   grid
   |> toIndexedList
   |> List.foldr (\row acc -> (rowAsHtml row) :: acc) []
 
 rowAsHtml : (Int, Array Bool) -> Html Msg
-rowAsHtml (r, row) =
-  row
+rowAsHtml (row, cells) =
+  cells
   |> toIndexedList
-  |> List.foldr (\(c, e) acc -> button [onClick (r, c), style [ ("backgroundColor", stateToColor e) ] ] [text "Click Me!"] :: acc) []
+  |> List.foldr (\(col, state) acc -> cellAsHtml (row, col) state :: acc) []
   |> div []
 
-stateToColor : Bool -> String
-stateToColor state =
-  if state then "red" else "gray"
+cellAsHtml : Coord -> Bool -> Html Msg
+cellAsHtml coord state =
+  button [
+    onClick coord,
+    style [ ("backgroundColor", if state then "red" else "gray") ]
+  ] [ text "Click Me!" ]
