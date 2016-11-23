@@ -33,6 +33,23 @@ all =
                     in
                         Expect.true "Expected an NxN grid" <| List.all ((==) n) [ xLen, yLen ]
             ]
+        , describe "Creating the grid from a list of bools"
+            [ test "A 3x3 grid should be created from a list of 16 bools" <|
+                \() ->
+                    let
+                        bools =
+                            [ True, False, False, True, True, False, True, True, True ]
+
+                        expected =
+                            [ [ True, False, False ]
+                            , [ True, True, False ]
+                            , [ True, True, True ]
+                            ]
+                                |> List.map (Array.fromList)
+                                |> Array.fromList
+                    in
+                        Expect.equal expected <| LightsOut.createGrid bools
+            ]
         , describe "Finding cells to toggle"
             [ test "A set of coords to toggle should be returned" <|
                 \() ->

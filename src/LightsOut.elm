@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Array exposing (..)
 import Set exposing (..)
 import Maybe exposing (..)
+import Random exposing (..)
 
 
 main =
@@ -21,12 +22,12 @@ main =
 -- MODEL
 
 
-type alias Grid =
-    Array (Array Bool)
-
-
 type alias Model =
     { grid : Grid }
+
+
+type alias Grid =
+    Array (Array Bool)
 
 
 model : Int -> Model
@@ -36,7 +37,14 @@ model n =
 
 init : ( Model, Cmd Msg )
 init =
-    ( model 4, Cmd.none )
+    ( model 4, Random.generate NewGrid (Random.list 16 Random.bool) )
+
+
+createGrid : List Bool -> Grid
+createGrid bools =
+    False
+        |> Array.repeat 4
+        |> Array.repeat 4
 
 
 
@@ -45,14 +53,14 @@ init =
 
 type Msg
     = ToggleCell ( Int, Int )
-    | NewGrid
+    | NewGrid (List Bool)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NewGrid ->
-            init
+        NewGrid bools ->
+            ( model, Cmd.none )
 
         ToggleCell coord ->
             ( { model | grid = updateGrid model.grid (neighbors coord) }, Cmd.none )
