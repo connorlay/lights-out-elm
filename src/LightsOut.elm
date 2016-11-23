@@ -33,45 +33,45 @@ init =
 
 -- UPDATE
 
-type alias Coord =
-  (Int, Int)
-
-type alias Msg =
-  Coord
+type Msg =
+  ToggleCell (Int, Int) | NewGrid
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
-    (_, _) ->
-      ( { model | grid = updateGrid model.grid (neighbors msg) }, Cmd.none )
+    NewGrid ->
+      init
 
-updateGrid : Grid -> Set Coord -> Grid
+    ToggleCell coord ->
+      ( { model | grid = updateGrid model.grid (neighbors coord) }, Cmd.none )
+
+updateGrid : Grid -> Set (Int, Int) -> Grid
 updateGrid grid coords =
   Set.foldl toggleCell grid coords
 
-neighbors : Coord -> Set Coord
+neighbors : (Int, Int) -> Set (Int, Int)
 neighbors (row, col) =
   [ (0, 0), (1, 0), (-1, 0), (0, 1), (0, -1) ]
   |> Set.fromList
   |> Set.map (\(row_, col_) -> (row + row_, col + col_))
 
-toggleCell : Coord -> Grid -> Grid
+toggleCell : (Int, Int) -> Grid -> Grid
 toggleCell (row, col) grid =
   let
-    toggleCelld = getElement (row, col) grid |> not
+    toggledCell = elementAt (row, col) grid |> not
     cells = grid
-          |> get row
+          |> Array.get row
           |> withDefault Array.empty
-          |> set col toggleCelld
+          |> Array.set col toggledCell
   in
-    set row cells grid
+    Array.set row cells grid
 
-getElement : Coord -> Grid -> Bool
-getElement (row, col) grid =
+elementAt : (Int, Int) -> Grid -> Bool
+elementAt (row, col) grid =
   grid
-  |> get row
+  |> Array.get row
   |> withDefault Array.empty
-  |> get col
+  |> Array.get col
   |> withDefault False
 
 -- VIEW
@@ -93,10 +93,10 @@ rowAsHtml (row, cells) =
   |> List.foldr (\(col, state) acc -> cellAsHtml (row, col) state :: acc) []
   |> div []
 
-cellAsHtml : Coord -> Bool -> Html Msg
+cellAsHtml : (Int, Int) -> Bool -> Html Msg
 cellAsHtml coord state =
   button [
-    onClick coord,
+    onClick (ToggleCell coord),
     style [ ("backgroundColor", if state then "red" else "gray") ]
   ] [ text "Click Me!" ]
 
