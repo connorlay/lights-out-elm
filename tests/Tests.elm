@@ -41,12 +41,11 @@ all =
                             [ True, False, False, True, True, False, True, True, True ]
 
                         expected =
-                            [ [ True, False, False ]
-                            , [ True, True, False ]
-                            , [ True, True, True ]
-                            ]
-                                |> List.map (Array.fromList)
-                                |> Array.fromList
+                            as2x2Array
+                                [ [ True, False, False ]
+                                , [ True, True, False ]
+                                , [ True, True, True ]
+                                ]
                     in
                         Expect.equal expected <| LightsOut.createGrid bools
             ]
@@ -72,13 +71,12 @@ all =
                                 |> .grid
 
                         expected =
-                            [ [ False, True, False, False ]
-                            , [ True, True, True, False ]
-                            , [ False, True, False, False ]
-                            , [ False, False, False, False ]
-                            ]
-                                |> List.map (Array.fromList)
-                                |> Array.fromList
+                            as2x2Array
+                                [ [ False, True, False, False ]
+                                , [ True, True, True, False ]
+                                , [ False, True, False, False ]
+                                , [ False, False, False, False ]
+                                ]
                     in
                         Expect.equal expected <| LightsOut.updateGrid grid coords
             , test "Cells out of bounds should not toggle" <|
@@ -93,14 +91,20 @@ all =
                                 |> .grid
 
                         expected =
-                            [ [ False, False, False, False ]
-                            , [ False, False, False, False ]
-                            , [ False, False, False, True ]
-                            , [ False, False, True, True ]
-                            ]
-                                |> List.map (Array.fromList)
-                                |> Array.fromList
+                            as2x2Array
+                                [ [ False, False, False, False ]
+                                , [ False, False, False, False ]
+                                , [ False, False, False, True ]
+                                , [ False, False, True, True ]
+                                ]
                     in
                         Expect.equal expected <| LightsOut.updateGrid grid coords
             ]
         ]
+
+
+as2x2Array : List (List Bool) -> Array (Array Bool)
+as2x2Array list =
+    list
+        |> List.map (Array.fromList)
+        |> Array.fromList
