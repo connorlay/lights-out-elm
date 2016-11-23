@@ -78,13 +78,16 @@ elementAt (row, col) grid =
 
 view : Model -> Html Msg
 view model =
-  div [] <| gridAsHtml model.grid
+  model
+  |> .grid
+  |> gridAsHtml
 
-gridAsHtml : Grid -> List (Html Msg)
+gridAsHtml : Grid -> Html Msg
 gridAsHtml grid =
   grid
   |> toIndexedList
   |> List.foldr (\row acc -> (rowAsHtml row) :: acc) []
+  |> div []
 
 rowAsHtml : (Int, Array Bool) -> Html Msg
 rowAsHtml (row, cells) =
