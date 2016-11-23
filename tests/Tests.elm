@@ -41,7 +41,7 @@ all =
                             [ True, False, False, True, True, False, True, True, True ]
 
                         expected =
-                            as2x2Array
+                            LightsOut.as2x2Array
                                 [ [ True, False, False ]
                                 , [ True, True, False ]
                                 , [ True, True, True ]
@@ -71,7 +71,7 @@ all =
                                 |> .grid
 
                         expected =
-                            as2x2Array
+                            LightsOut.as2x2Array
                                 [ [ False, True, False, False ]
                                 , [ True, True, True, False ]
                                 , [ False, True, False, False ]
@@ -91,7 +91,7 @@ all =
                                 |> .grid
 
                         expected =
-                            as2x2Array
+                            LightsOut.as2x2Array
                                 [ [ False, False, False, False ]
                                 , [ False, False, False, False ]
                                 , [ False, False, False, True ]
@@ -101,10 +101,3 @@ all =
                         Expect.equal expected <| LightsOut.updateGrid grid coords
             ]
         ]
-
-
-as2x2Array : List (List Bool) -> Array (Array Bool)
-as2x2Array list =
-    list
-        |> List.map (Array.fromList)
-        |> Array.fromList

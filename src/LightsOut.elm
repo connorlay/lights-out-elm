@@ -40,34 +40,6 @@ init =
     ( model 4, Random.generate NewGrid (Random.list 16 Random.bool) )
 
 
-createGrid : List Bool -> Grid
-createGrid bools =
-    let
-        dim =
-            bools
-                |> List.length
-                |> toFloat
-                |> sqrt
-                |> ceiling
-    in
-        bools
-            |> chunksOfLeft dim
-            |> List.map (Array.fromList)
-            |> Array.fromList
-
-
-chunksOfLeft : Int -> List a -> List (List a)
-chunksOfLeft k xs =
-    if k == 0 then
-        [ [] ]
-    else if k < 0 then
-        []
-    else if List.length xs > k then
-        List.take k xs :: chunksOfLeft k (List.drop k xs)
-    else
-        [ xs ]
-
-
 
 -- UPDATE
 
@@ -87,6 +59,41 @@ update msg model =
             ( { model | grid = updateGrid model.grid (neighbors coord) }, Cmd.none )
 
 
+createGrid : List Bool -> Grid
+createGrid bools =
+    bools
+        |> chunk (dimension bools)
+        |> as2x2Array
+
+
+dimension : List a -> Int
+dimension list =
+    list
+        |> List.length
+        |> toFloat
+        |> sqrt
+        |> ceiling
+
+
+chunk : Int -> List a -> List (List a)
+chunk k xs =
+    if k == 0 then
+        [ [] ]
+    else if k < 0 then
+        []
+    else if List.length xs > k then
+        List.take k xs :: chunk k (List.drop k xs)
+    else
+        [ xs ]
+
+
+as2x2Array : List (List Bool) -> Array (Array Bool)
+as2x2Array list =
+    list
+        |> List.map (Array.fromList)
+        |> Array.fromList
+
+
 updateGrid : Grid -> Set ( Int, Int ) -> Grid
 updateGrid grid coords =
     Set.foldl toggleCell grid coords
@@ -103,7 +110,9 @@ toggleCell : ( Int, Int ) -> Grid -> Grid
 toggleCell ( row, col ) grid =
     let
         toggledCell =
-            elementAt ( row, col ) grid |> not
+            grid
+                |> get2x2 ( row, col )
+                |> not
 
         cells =
             grid
@@ -114,8 +123,8 @@ toggleCell ( row, col ) grid =
         Array.set row cells grid
 
 
-elementAt : ( Int, Int ) -> Grid -> Bool
-elementAt ( row, col ) grid =
+get2x2 : ( Int, Int ) -> Grid -> Bool
+get2x2 ( row, col ) grid =
     grid
         |> Array.get row
         |> withDefault Array.empty
