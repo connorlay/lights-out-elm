@@ -42,9 +42,30 @@ init =
 
 createGrid : List Bool -> Grid
 createGrid bools =
-    False
-        |> Array.repeat 4
-        |> Array.repeat 4
+    let
+        dim =
+            bools
+                |> List.length
+                |> toFloat
+                |> sqrt
+                |> ceiling
+    in
+        bools
+            |> chunksOfLeft dim
+            |> List.map (Array.fromList)
+            |> Array.fromList
+
+
+chunksOfLeft : Int -> List a -> List (List a)
+chunksOfLeft k xs =
+    if k == 0 then
+        [ [] ]
+    else if k < 0 then
+        []
+    else if List.length xs > k then
+        List.take k xs :: chunksOfLeft k (List.drop k xs)
+    else
+        [ xs ]
 
 
 
@@ -60,7 +81,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NewGrid bools ->
-            ( model, Cmd.none )
+            ( { model | grid = createGrid bools }, Cmd.none )
 
         ToggleCell coord ->
             ( { model | grid = updateGrid model.grid (neighbors coord) }, Cmd.none )
