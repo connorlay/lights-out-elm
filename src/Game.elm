@@ -9,21 +9,13 @@ import Maybe exposing (..)
 import Random exposing (..)
 
 
-main =
-    program
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
-
-
-
 -- MODEL
 
 
 type alias Model =
-    { grid : Grid }
+    { grid : Grid
+    , victory : Bool
+    }
 
 
 type alias Grid =
@@ -32,12 +24,14 @@ type alias Grid =
 
 model : Int -> Model
 model n =
-    { grid = False |> Array.repeat n |> Array.repeat n }
+    { grid = False |> Array.repeat n |> Array.repeat n
+    , victory = False
+    }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( model 4, Random.generate NewGrid (Random.list 16 Random.bool) )
+init : Int -> ( Model, Cmd Msg )
+init size =
+    ( model size, Random.generate NewGrid (Random.list (size ^ 2) Random.bool) )
 
 
 
