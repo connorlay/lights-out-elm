@@ -11,12 +11,12 @@
   },
   "scripts": {
     "start": "electron .",
-    "build": "elm make ./src/LightsOut.elm --output ./build/elm.js",
+    "build": "elm make ./src/*.elm --output ./build/elm.js",
     "test": "elm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/connorlay/magical-cards.git"
+    "url": "git+https://github.com/connorlay/lights-out-elm.git"
   },
   "keywords": [
     "mtg",

@@ -1,4 +1,4 @@
-port module LightsOut exposing (..)
+port module Game exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

@@ -1,6 +1,6 @@
 module Tests exposing (..)
 
-import LightsOut exposing (..)
+import Game exposing (..)
 import Test exposing (..)
 import Fuzz exposing (..)
 import Expect
@@ -11,13 +11,13 @@ import Maybe exposing (..)
 
 all : Test
 all =
-    describe "LightsOut"
+    describe "Game"
         [ describe "Creating the model"
             [ fuzz (intRange 4 10) "Grid should always be NxN" <|
                 \n ->
                     let
                         model =
-                            LightsOut.model n
+                            Game.model n
 
                         xLen =
                             model
@@ -41,13 +41,13 @@ all =
                             [ True, False, False, True, True, False, True, True, True ]
 
                         expected =
-                            LightsOut.as2x2Array
+                            Game.as2x2Array
                                 [ [ True, False, False ]
                                 , [ True, True, False ]
                                 , [ True, True, True ]
                                 ]
                     in
-                        Expect.equal expected <| LightsOut.createGrid bools
+                        Expect.equal expected <| Game.createGrid bools
             ]
         , describe "Finding cells to toggle"
             [ test "A set of coords to toggle should be returned" <|
@@ -56,7 +56,7 @@ all =
                         expected =
                             Set.fromList [ ( 1, 1 ), ( 0, 1 ), ( 1, 0 ), ( 2, 1 ), ( 1, 2 ) ]
                     in
-                        Expect.equal expected <| LightsOut.neighbors ( 1, 1 )
+                        Expect.equal expected <| Game.neighbors ( 1, 1 )
             ]
         , describe "Toggling cells in a grid"
             [ test "Cells should toggle based on coords in set" <|
@@ -67,18 +67,18 @@ all =
 
                         grid =
                             4
-                                |> LightsOut.model
+                                |> Game.model
                                 |> .grid
 
                         expected =
-                            LightsOut.as2x2Array
+                            Game.as2x2Array
                                 [ [ False, True, False, False ]
                                 , [ True, True, True, False ]
                                 , [ False, True, False, False ]
                                 , [ False, False, False, False ]
                                 ]
                     in
-                        Expect.equal expected <| LightsOut.updateGrid grid coords
+                        Expect.equal expected <| Game.updateGrid grid coords
             , test "Cells out of bounds should not toggle" <|
                 \() ->
                     let
@@ -87,17 +87,17 @@ all =
 
                         grid =
                             4
-                                |> LightsOut.model
+                                |> Game.model
                                 |> .grid
 
                         expected =
-                            LightsOut.as2x2Array
+                            Game.as2x2Array
                                 [ [ False, False, False, False ]
                                 , [ False, False, False, False ]
                                 , [ False, False, False, True ]
                                 , [ False, False, True, True ]
                                 ]
                     in
-                        Expect.equal expected <| LightsOut.updateGrid grid coords
+                        Expect.equal expected <| Game.updateGrid grid coords
             ]
         ]
