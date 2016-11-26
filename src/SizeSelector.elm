@@ -9,12 +9,14 @@ import Html.Events exposing (..)
 
 
 type alias Model =
-    { size : Int }
+    { size : Int
+    , min : Int
+    }
 
 
 init : Int -> Model
 init n =
-    Model n
+    Model n n
 
 
 
@@ -34,9 +36,15 @@ update msg model =
             { model | size = model.size + 1 }
 
         Decrement ->
-            { model | size = model.size - 1 }
+            { model
+                | size =
+                    if model.size > model.min then
+                        model.size - 1
+                    else
+                        model.size
+            }
 
-        Confirm _ ->
+        _ ->
             model
 
 

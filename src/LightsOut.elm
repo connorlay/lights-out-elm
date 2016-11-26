@@ -49,41 +49,42 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SizeMsg submsg ->
-            case submsg of
-                Confirm size ->
-                    let
-                        ( submodel, subcmd ) =
-                            Game.init size
-                    in
-                        ( { model | game = Active submodel }
-                        , Cmd.map GameMsg subcmd
-                        )
-
-                _ ->
-                    ( { model | size = SizeSelector.update submsg model.size }
-                    , Cmd.none
-                    )
+            handleSizeMsg submsg model
 
         GameMsg submsg ->
+            handleGameMsg submsg model
+
+
+handleSizeMsg : SizeSelector.Msg -> Model -> ( Model, Cmd Msg )
+handleSizeMsg msg model =
+    case msg of
+        Confirm size ->
             let
-                ( submodel, _ ) =
-                    updateGame submsg model.game
+                ( submodel, subcmd ) =
+                    Game.init size
             in
-                ( { model | game = submodel }, Cmd.none )
+                ( { model | game = Active submodel }
+                , Cmd.map GameMsg subcmd
+                )
+
+        _ ->
+            ( { model | size = SizeSelector.update msg model.size }
+            , Cmd.none
+            )
 
 
-updateGame : Game.Msg -> GameState -> ( GameState, Cmd Game.Msg )
-updateGame msg gameState =
-    case gameState of
+handleGameMsg : Game.Msg -> Model -> ( Model, Cmd Msg )
+handleGameMsg msg model =
+    case model.game of
         Inactive ->
-            ( gameState, Cmd.none )
+            ( model, Cmd.none )
 
         Active game ->
             let
                 ( submodel, subcmd ) =
                     Game.update msg game
             in
-                ( Active submodel, subcmd )
+                ( { model | game = Active submodel }, Cmd.map GameMsg subcmd )
 
 
 
