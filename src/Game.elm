@@ -126,7 +126,6 @@ get2x2 ( row, col ) grid =
         |> withDefault False
 
 
-
 -- VIEW
 
 

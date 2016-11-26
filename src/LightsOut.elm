@@ -20,7 +20,7 @@ main =
 
 
 type GameState
-    = Inactive Game.Model
+    = Inactive
     | Active Game.Model
 
 
@@ -32,7 +32,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model 3 (Inactive (Game.model 0)), Cmd.none )
+    ( Model 3 Inactive, Cmd.none )
 
 
 
@@ -65,20 +65,26 @@ update msg model =
             in
                 ( { model | game = submodel }, Cmd.map GameMsg subcmd )
 
-        GameMsg gamemsg ->
+        GameMsg submsg ->
             let
-                game =
-                    case model.game of
-                        Inactive game ->
-                            game
-
-                        Active game ->
-                            game
-
                 ( submodel, subcmd ) =
-                    Game.update gamemsg game
+                    updateGame submsg model.game
             in
-                ( { model | game = Active submodel }, Cmd.map GameMsg subcmd )
+                ( { model | game = submodel }, Cmd.map GameMsg subcmd )
+
+
+updateGame : Game.Msg -> GameState -> ( GameState, Cmd Game.Msg )
+updateGame msg gameState =
+    case gameState of
+        Inactive ->
+            ( gameState, Cmd.none )
+
+        Active game ->
+            let
+                ( submodel, subcmd ) =
+                    Game.update msg game
+            in
+                ( Active submodel, subcmd )
 
 
 
@@ -88,7 +94,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     case model.game of
-        Inactive submodel ->
+        Inactive ->
             div []
                 [ text <| toString model.size
                 , button [ onClick IncrementSize ] [ text "+" ]
