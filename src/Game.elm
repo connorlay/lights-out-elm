@@ -14,7 +14,6 @@ import Random exposing (..)
 
 type alias Model =
     { grid : Grid
-    , victory : Bool
     }
 
 
@@ -25,7 +24,6 @@ type alias Grid =
 model : Int -> Model
 model n =
     { grid = False |> Array.repeat n |> Array.repeat n
-    , victory = False
     }
 
 
@@ -124,6 +122,7 @@ get2x2 ( row, col ) grid =
         |> withDefault Array.empty
         |> Array.get col
         |> withDefault False
+
 
 
 -- VIEW

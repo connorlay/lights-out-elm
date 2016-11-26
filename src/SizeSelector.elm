@@ -9,14 +9,12 @@ import Html.Events exposing (..)
 
 
 type alias Model =
-    { size : Int
-    , confirmed : Bool
-    }
+    { size : Int }
 
 
-init : Int -> ( Model, Cmd Msg )
+init : Int -> Model
 init n =
-    ( Model n False, Cmd.none )
+    Model n
 
 
 
@@ -26,20 +24,20 @@ init n =
 type Msg
     = Increment
     | Decrement
-    | Confirm
+    | Confirm Int
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> Model
 update msg model =
     case msg of
         Increment ->
-            ( { model | size = model.size + 1 }, Cmd.none )
+            { model | size = model.size + 1 }
 
         Decrement ->
-            ( { model | size = model.size - 1 }, Cmd.none )
+            { model | size = model.size - 1 }
 
-        Confirm ->
-            ( { model | confirmed = True }, Cmd.none )
+        Confirm _ ->
+            model
 
 
 
@@ -52,5 +50,5 @@ view model =
         [ text <| toString model.size
         , button [ onClick Increment ] [ text "+" ]
         , button [ onClick Decrement ] [ text "-" ]
-        , button [ onClick Confirm ] [ text "Go!" ]
+        , button [ onClick (Confirm model.size) ] [ text "Go!" ]
         ]

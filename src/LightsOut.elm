@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Game exposing (..)
+import SizeSelector exposing (..)
 
 
 main =
@@ -25,14 +26,14 @@ type GameState
 
 
 type alias Model =
-    { size : Int
+    { size : SizeSelector.Model
     , game : GameState
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model 3 Inactive, Cmd.none )
+    ( Model (SizeSelector.init 3) Inactive, Cmd.none )
 
 
 
@@ -40,37 +41,35 @@ init =
 
 
 type Msg
-    = IncrementSize
-    | DecrementSize
-    | StartGame
+    = SizeMsg SizeSelector.Msg
     | GameMsg Game.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        IncrementSize ->
-            ( { model | size = model.size + 1 }, Cmd.none )
+        SizeMsg submsg ->
+            case submsg of
+                Confirm size ->
+                    let
+                        ( submodel, subcmd ) =
+                            Game.init size
+                    in
+                        ( { model | game = Active submodel }
+                        , Cmd.map GameMsg subcmd
+                        )
 
-        DecrementSize ->
-            ( { model | size = model.size - 1 }, Cmd.none )
-
-        StartGame ->
-            let
-                ( gamemodel, subcmd ) =
-                    Game.init model.size
-
-                submodel =
-                    Active gamemodel
-            in
-                ( { model | game = submodel }, Cmd.map GameMsg subcmd )
+                _ ->
+                    ( { model | size = SizeSelector.update submsg model.size }
+                    , Cmd.none
+                    )
 
         GameMsg submsg ->
             let
-                ( submodel, subcmd ) =
+                ( submodel, _ ) =
                     updateGame submsg model.game
             in
-                ( { model | game = submodel }, Cmd.map GameMsg subcmd )
+                ( { model | game = submodel }, Cmd.none )
 
 
 updateGame : Game.Msg -> GameState -> ( GameState, Cmd Game.Msg )
@@ -95,12 +94,7 @@ view : Model -> Html Msg
 view model =
     case model.game of
         Inactive ->
-            div []
-                [ text <| toString model.size
-                , button [ onClick IncrementSize ] [ text "+" ]
-                , button [ onClick DecrementSize ] [ text "-" ]
-                , button [ onClick StartGame ] [ text "Go!" ]
-                ]
+            Html.map SizeMsg (SizeSelector.view model.size)
 
         Active submodel ->
             Html.map GameMsg (Game.view submodel)
