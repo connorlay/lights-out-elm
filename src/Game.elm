@@ -41,30 +41,21 @@ init size =
 type Msg
     = NewGrid (List Bool)
     | ToggleCell ( Int, Int )
-    | Victory Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NewGrid bools ->
-            ( { model | grid = createGrid bools }, Cmd.none )
+            ( { model | grid = createGrid bools, moves = 0 }, Cmd.none )
 
         ToggleCell coord ->
-            let
-                model_ =
-                    { model
-                        | grid = updateGrid model.grid (neighbors coord)
-                        , moves = model.moves + 1
-                    }
-            in
-                if victory model_.grid then
-                    update (Victory model.moves) model_
-                else
-                    ( model_, Cmd.none )
-
-        _ ->
-            ( model, Cmd.none )
+            ( { model
+                | grid = updateGrid model.grid (neighbors coord)
+                , moves = model.moves + 1
+              }
+            , Cmd.none
+            )
 
 
 createGrid : List Bool -> Grid
@@ -140,8 +131,8 @@ get2x2 ( row, col ) grid =
         |> withDefault False
 
 
-victory : Grid -> Bool
-victory grid =
+allOff : Grid -> Bool
+allOff grid =
     grid
         |> Array.toList
         |> List.all (\row -> row |> Array.toList |> List.all not)

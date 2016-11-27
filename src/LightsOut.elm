@@ -23,6 +23,7 @@ main =
 type GameState
     = Inactive
     | Active Game.Model
+    | Victory Int
 
 
 type alias Model =
@@ -33,7 +34,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model (SizeSelector.init 3) Inactive, Cmd.none )
+    ( Model (SizeSelector.init 2) Inactive, Cmd.none )
 
 
 
@@ -76,15 +77,18 @@ handleSizeMsg msg model =
 handleGameMsg : Game.Msg -> Model -> ( Model, Cmd Msg )
 handleGameMsg msg model =
     case model.game of
-        Inactive ->
-            ( model, Cmd.none )
-
         Active game ->
             let
                 ( submodel, subcmd ) =
                     Game.update msg game
             in
-                ( { model | game = Active submodel }, Cmd.map GameMsg subcmd )
+                if Game.allOff submodel.grid then
+                    ( { model | game = Victory submodel.moves }, Cmd.none )
+                else
+                    ( { model | game = Active submodel }, Cmd.map GameMsg subcmd )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 
@@ -99,6 +103,9 @@ view model =
 
         Active submodel ->
             Html.map GameMsg (Game.view submodel)
+
+        Victory moves ->
+            div [] [ text <| "Victory in " ++ (toString moves) ++ " moves!" ]
 
 
 

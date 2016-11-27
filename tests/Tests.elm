@@ -109,7 +109,7 @@ all =
                                 |> Game.model
                                 |> .grid
                     in
-                        Expect.true "Grid is a victory" <| Game.victory grid
+                        Expect.true "Grid is a victory" <| Game.allOff grid
             , test "Grid should not be a victory if any cells are on" <|
                 \() ->
                     let
@@ -119,6 +119,6 @@ all =
                                 |> .grid
                                 |> Game.toggleCell ( 0, 0 )
                     in
-                        Expect.false "Grid is not a victory" <| Game.victory grid
+                        Expect.false "Grid is not a victory" <| Game.allOff grid
             ]
         ]
