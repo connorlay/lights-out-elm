@@ -144,9 +144,10 @@ allOff grid =
 
 view : Model -> Html Msg
 view model =
-    model
-        |> .grid
-        |> gridAsHtml
+    div []
+        [ model |> .grid |> gridAsHtml
+        , text <| "Moves: " ++ (toString model.moves)
+        ]
 
 
 gridAsHtml : Grid -> Html Msg
