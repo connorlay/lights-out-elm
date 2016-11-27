@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Game exposing (..)
-import SizeSelector exposing (..)
+import IntPicker exposing (..)
 
 
 main =
@@ -27,14 +27,14 @@ type GameState
 
 
 type alias Model =
-    { size : SizeSelector.Model
+    { size : IntPicker.Model
     , game : GameState
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model (SizeSelector.init 2) Inactive, Cmd.none )
+    ( Model (IntPicker.init 2) Inactive, Cmd.none )
 
 
 
@@ -42,7 +42,7 @@ init =
 
 
 type Msg
-    = SizeMsg SizeSelector.Msg
+    = SizeMsg IntPicker.Msg
     | GameMsg Game.Msg
 
 
@@ -56,7 +56,7 @@ update msg model =
             handleGameMsg submsg model
 
 
-handleSizeMsg : SizeSelector.Msg -> Model -> ( Model, Cmd Msg )
+handleSizeMsg : IntPicker.Msg -> Model -> ( Model, Cmd Msg )
 handleSizeMsg msg model =
     case msg of
         Confirm size ->
@@ -69,7 +69,7 @@ handleSizeMsg msg model =
                 )
 
         _ ->
-            ( { model | size = SizeSelector.update msg model.size }
+            ( { model | size = IntPicker.update msg model.size }
             , Cmd.none
             )
 
@@ -99,7 +99,7 @@ view : Model -> Html Msg
 view model =
     case model.game of
         Inactive ->
-            Html.map SizeMsg (SizeSelector.view model.size)
+            Html.map SizeMsg (IntPicker.view model.size)
 
         Active submodel ->
             Html.map GameMsg (Game.view submodel)

@@ -1,4 +1,4 @@
-port module SizeSelector exposing (..)
+port module IntPicker exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
