@@ -14,6 +14,7 @@ import Random exposing (..)
 
 type alias Model =
     { grid : Grid
+    , moves : Int
     }
 
 
@@ -24,6 +25,7 @@ type alias Grid =
 model : Int -> Model
 model n =
     { grid = False |> Array.repeat n |> Array.repeat n
+    , moves = 0
     }
 
 
@@ -37,8 +39,9 @@ init size =
 
 
 type Msg
-    = ToggleCell ( Int, Int )
-    | NewGrid (List Bool)
+    = NewGrid (List Bool)
+    | ToggleCell ( Int, Int )
+    | Victory Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -48,7 +51,20 @@ update msg model =
             ( { model | grid = createGrid bools }, Cmd.none )
 
         ToggleCell coord ->
-            ( { model | grid = updateGrid model.grid (neighbors coord) }, Cmd.none )
+            let
+                model_ =
+                    { model
+                        | grid = updateGrid model.grid (neighbors coord)
+                        , moves = model.moves + 1
+                    }
+            in
+                if victory model_.grid then
+                    update (Victory model.moves) model_
+                else
+                    ( model_, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 createGrid : List Bool -> Grid
@@ -122,6 +138,13 @@ get2x2 ( row, col ) grid =
         |> withDefault Array.empty
         |> Array.get col
         |> withDefault False
+
+
+victory : Grid -> Bool
+victory grid =
+    grid
+        |> Array.toList
+        |> List.all (\row -> row |> Array.toList |> List.all not)
 
 
 
