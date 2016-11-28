@@ -1,46 +1,22 @@
-port module Game exposing (..)
+port module Grid.Update exposing (..)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import Array exposing (..)
 import Set exposing (..)
 import Maybe exposing (..)
-import Random exposing (..)
+import Grid.Model exposing (..)
+import Grid.Message exposing (..)
 
 
--- MODEL
+type alias Msg =
+    Grid.Message.Msg
 
 
 type alias Model =
-    { grid : Grid
-    , moves : Int
-    }
+    Grid.Model.Model
 
 
 type alias Grid =
-    Array (Array Bool)
-
-
-model : Int -> Model
-model n =
-    { grid = False |> Array.repeat n |> Array.repeat n
-    , moves = 0
-    }
-
-
-init : Int -> ( Model, Cmd Msg )
-init size =
-    ( model size, Random.generate NewGrid (Random.list (size ^ 2) Random.bool) )
-
-
-
--- UPDATE
-
-
-type Msg
-    = NewGrid (List Bool)
-    | ToggleCell ( Int, Int )
+    Grid.Model.Grid
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -136,58 +112,3 @@ allOff grid =
     grid
         |> Array.toList
         |> List.all (\row -> row |> Array.toList |> List.all not)
-
-
-
--- VIEW
-
-
-view : Model -> Html Msg
-view model =
-    div []
-        [ model |> .grid |> gridAsHtml
-        , text <| "Moves: " ++ (toString model.moves)
-        ]
-
-
-gridAsHtml : Grid -> Html Msg
-gridAsHtml grid =
-    grid
-        |> toIndexedList
-        |> List.foldr (\row acc -> (rowAsHtml row) :: acc) []
-        |> div []
-
-
-rowAsHtml : ( Int, Array Bool ) -> Html Msg
-rowAsHtml ( row, cells ) =
-    cells
-        |> toIndexedList
-        |> List.foldr
-            (\( col, state ) acc -> cellAsHtml ( row, col ) state :: acc)
-            []
-        |> div []
-
-
-cellAsHtml : ( Int, Int ) -> Bool -> Html Msg
-cellAsHtml coord state =
-    button
-        [ onClick (ToggleCell coord)
-        , style
-            [ ( "backgroundColor"
-              , if state then
-                    "red"
-                else
-                    "gray"
-              )
-            ]
-        ]
-        [ text "Click Me!" ]
-
-
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
