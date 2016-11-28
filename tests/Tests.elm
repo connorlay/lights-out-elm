@@ -1,6 +1,9 @@
 module Tests exposing (..)
 
-import Grid exposing (..)
+import Grid.Model exposing (..)
+import Grid.Update exposing (..)
+import Grid.View exposing (..)
+
 import Test exposing (..)
 import Fuzz exposing (..)
 import Expect
@@ -17,7 +20,7 @@ all =
                 \n ->
                     let
                         model =
-                            Grid.model n
+                            Grid.Model.model n
 
                         xLen =
                             model
@@ -41,13 +44,13 @@ all =
                             [ True, False, False, True, True, False, True, True, True ]
 
                         expected =
-                            Grid.as2x2Array
+                            Grid.Update.as2x2Array
                                 [ [ True, False, False ]
                                 , [ True, True, False ]
                                 , [ True, True, True ]
                                 ]
                     in
-                        Expect.equal expected <| Grid.createGrid bools
+                        Expect.equal expected <| Grid.Update.createGrid bools
             ]
         , describe "Finding cells to toggle"
             [ test "A set of coords to toggle should be returned" <|
@@ -56,7 +59,7 @@ all =
                         expected =
                             Set.fromList [ ( 1, 1 ), ( 0, 1 ), ( 1, 0 ), ( 2, 1 ), ( 1, 2 ) ]
                     in
-                        Expect.equal expected <| Grid.neighbors ( 1, 1 )
+                        Expect.equal expected <| Grid.Update.neighbors ( 1, 1 )
             ]
         , describe "Toggling cells in a grid"
             [ test "Cells should toggle based on coords in set" <|
@@ -67,18 +70,18 @@ all =
 
                         grid =
                             4
-                                |> Grid.model
+                                |> Grid.Model.model
                                 |> .grid
 
                         expected =
-                            Grid.as2x2Array
+                            Grid.Update.as2x2Array
                                 [ [ False, True, False, False ]
                                 , [ True, True, True, False ]
                                 , [ False, True, False, False ]
                                 , [ False, False, False, False ]
                                 ]
                     in
-                        Expect.equal expected <| Grid.updateGrid grid coords
+                        Expect.equal expected <| Grid.Update.updateGrid grid coords
             , test "Cells out of bounds should not toggle" <|
                 \() ->
                     let
@@ -87,18 +90,18 @@ all =
 
                         grid =
                             4
-                                |> Grid.model
+                                |> Grid.Model.model
                                 |> .grid
 
                         expected =
-                            Grid.as2x2Array
+                            Grid.Update.as2x2Array
                                 [ [ False, False, False, False ]
                                 , [ False, False, False, False ]
                                 , [ False, False, False, True ]
                                 , [ False, False, True, True ]
                                 ]
                     in
-                        Expect.equal expected <| Grid.updateGrid grid coords
+                        Expect.equal expected <| Grid.Update.updateGrid grid coords
             ]
         , describe "Victory detection" <|
             [ test "Grid should be a victory if all cells are off" <|
@@ -106,19 +109,19 @@ all =
                     let
                         grid =
                             4
-                                |> Grid.model
+                                |> Grid.Model.model
                                 |> .grid
                     in
-                        Expect.true "Grid is a victory" <| Grid.allOff grid
+                        Expect.true "Grid is a victory" <| Grid.Update.allOff grid
             , test "Grid should not be a victory if any cells are on" <|
                 \() ->
                     let
                         grid =
                             4
-                                |> Grid.model
+                                |> Grid.Model.model
                                 |> .grid
-                                |> Grid.toggleCell ( 0, 0 )
+                                |> Grid.Update.toggleCell ( 0, 0 )
                     in
-                        Expect.false "Grid is not a victory" <| Grid.allOff grid
+                        Expect.false "Grid is not a victory" <| Grid.Update.allOff grid
             ]
         ]

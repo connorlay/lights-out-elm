@@ -3,10 +3,10 @@ port module LightsOut exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Grid exposing (..)
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 import Grid.Update exposing (..)
+import Grid.View exposing (..)
 import IntPicker exposing (..)
 
 type alias GridModel = Grid.Model.Model
@@ -107,7 +107,7 @@ view model =
             Html.map SizeMsg (IntPicker.view model.size)
 
         Active submodel ->
-            Html.map GridMsg (Grid.view submodel)
+            Html.map GridMsg (Grid.View.view submodel)
 
         Victory moves ->
             div [] [ text <| "Victory in " ++ (toString moves) ++ " moves!" ]

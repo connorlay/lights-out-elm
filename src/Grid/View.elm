@@ -1,23 +1,15 @@
-port module Grid exposing (..)
+port module Grid.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Array exposing (..)
-import Set exposing (..)
-import Maybe exposing (..)
-import Random exposing (..)
 import Grid.Model exposing (..)
-import Grid.Update exposing (..)
 import Grid.Message exposing (..)
-
+import Array exposing (..)
 
 type alias Msg = Grid.Message.Msg
 type alias Model = Grid.Model.Model
 type alias Grid = Grid.Model.Grid
-
-
--- VIEW
 
 
 view : Model -> Html Msg
@@ -60,4 +52,3 @@ cellAsHtml coord state =
             ]
         ]
         [ text "Click Me!" ]
-
