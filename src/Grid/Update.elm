@@ -3,7 +3,6 @@ port module Grid.Update exposing (..)
 import Array exposing (..)
 import Set exposing (..)
 import Maybe exposing (..)
-import Random exposing (..)
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 

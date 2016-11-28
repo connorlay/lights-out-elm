@@ -1,8 +1,8 @@
 port module Grid.Model exposing (..)
 
 import Grid.Message exposing (..)
+import Grid.Command exposing (..)
 import Array exposing (..)
-import Random exposing (..)
 
 type alias Msg = Grid.Message.Msg
 
@@ -25,7 +25,7 @@ model n =
 
 init : Int -> ( Model, Cmd Msg )
 init size =
-    ( model size, Random.generate NewGrid (Random.list (size ^ 2) Random.bool) )
+    ( model size, Grid.Command.randomBools size )
 
 
 
