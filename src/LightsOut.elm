@@ -4,8 +4,12 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Grid exposing (..)
+import Grid.Model exposing (..)
+import Grid.Message exposing (..)
 import IntPicker exposing (..)
 
+type alias GridModel = Grid.Model.Model
+type alias GridMsg = Grid.Message.Msg
 
 main =
     Html.program
@@ -22,7 +26,7 @@ main =
 
 type GridState
     = Inactive
-    | Active Grid.Model
+    | Active GridModel
     | Victory Int
 
 
@@ -43,7 +47,7 @@ init =
 
 type Msg
     = SizeMsg IntPicker.Msg
-    | GridMsg Grid.Msg
+    | GridMsg GridMsg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -62,7 +66,7 @@ handleSizeMsg msg model =
         Confirm size ->
             let
                 ( submodel, subcmd ) =
-                    Grid.init size
+                    Grid.Model.init size
             in
                 ( { model | game = Active submodel }
                 , Cmd.map GridMsg subcmd
@@ -74,7 +78,7 @@ handleSizeMsg msg model =
             )
 
 
-handleGridMsg : Grid.Msg -> Model -> ( Model, Cmd Msg )
+handleGridMsg : GridMsg -> Model -> ( Model, Cmd Msg )
 handleGridMsg msg model =
     case model.game of
         Active game ->

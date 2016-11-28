@@ -7,41 +7,13 @@ import Array exposing (..)
 import Set exposing (..)
 import Maybe exposing (..)
 import Random exposing (..)
+import Grid.Model exposing (..)
+import Grid.Message exposing (..)
 
 
--- MODEL
-
-
-type alias Model =
-    { grid : Grid
-    , moves : Int
-    }
-
-
-type alias Grid =
-    Array (Array Bool)
-
-
-model : Int -> Model
-model n =
-    { grid = False |> Array.repeat n |> Array.repeat n
-    , moves = 0
-    }
-
-
-init : Int -> ( Model, Cmd Msg )
-init size =
-    ( model size, Random.generate NewGrid (Random.list (size ^ 2) Random.bool) )
-
-
+type alias Msg = Grid.Message.Msg
 
 -- UPDATE
-
-
-type Msg
-    = NewGrid (List Bool)
-    | ToggleCell ( Int, Int )
-
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
