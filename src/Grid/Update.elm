@@ -6,9 +6,18 @@ import Maybe exposing (..)
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 
-type alias Msg = Grid.Message.Msg
-type alias Model = Grid.Model.Model
-type alias Grid = Grid.Model.Grid
+
+type alias Msg =
+    Grid.Message.Msg
+
+
+type alias Model =
+    Grid.Model.Model
+
+
+type alias Grid =
+    Grid.Model.Grid
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -23,6 +32,7 @@ update msg model =
               }
             , Cmd.none
             )
+
 
 createGrid : List Bool -> Grid
 createGrid bools =
@@ -102,4 +112,3 @@ allOff grid =
     grid
         |> Array.toList
         |> List.all (\row -> row |> Array.toList |> List.all not)
-

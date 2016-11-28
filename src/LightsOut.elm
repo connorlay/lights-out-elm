@@ -9,8 +9,14 @@ import Grid.Update exposing (..)
 import Grid.View exposing (..)
 import IntPicker exposing (..)
 
-type alias GridModel = Grid.Model.Model
-type alias GridMsg = Grid.Message.Msg
+
+type alias GridModel =
+    Grid.Model.Model
+
+
+type alias GridMsg =
+    Grid.Message.Msg
+
 
 main =
     Html.program

@@ -3,7 +3,6 @@ module Tests exposing (..)
 import Grid.Model exposing (..)
 import Grid.Update exposing (..)
 import Grid.View exposing (..)
-
 import Test exposing (..)
 import Fuzz exposing (..)
 import Expect

@@ -7,9 +7,17 @@ import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 import Array exposing (..)
 
-type alias Msg = Grid.Message.Msg
-type alias Model = Grid.Model.Model
-type alias Grid = Grid.Model.Grid
+
+type alias Msg =
+    Grid.Message.Msg
+
+
+type alias Model =
+    Grid.Model.Model
+
+
+type alias Grid =
+    Grid.Model.Grid
 
 
 view : Model -> Html Msg
