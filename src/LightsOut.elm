@@ -3,7 +3,7 @@ port module LightsOut exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Game exposing (..)
+import Grid exposing (..)
 import IntPicker exposing (..)
 
 
@@ -20,15 +20,15 @@ main =
 -- MODEL
 
 
-type GameState
+type GridState
     = Inactive
-    | Active Game.Model
+    | Active Grid.Model
     | Victory Int
 
 
 type alias Model =
     { size : IntPicker.Model
-    , game : GameState
+    , game : GridState
     }
 
 
@@ -43,7 +43,7 @@ init =
 
 type Msg
     = SizeMsg IntPicker.Msg
-    | GameMsg Game.Msg
+    | GridMsg Grid.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -52,8 +52,8 @@ update msg model =
         SizeMsg submsg ->
             handleSizeMsg submsg model
 
-        GameMsg submsg ->
-            handleGameMsg submsg model
+        GridMsg submsg ->
+            handleGridMsg submsg model
 
 
 handleSizeMsg : IntPicker.Msg -> Model -> ( Model, Cmd Msg )
@@ -62,10 +62,10 @@ handleSizeMsg msg model =
         Confirm size ->
             let
                 ( submodel, subcmd ) =
-                    Game.init size
+                    Grid.init size
             in
                 ( { model | game = Active submodel }
-                , Cmd.map GameMsg subcmd
+                , Cmd.map GridMsg subcmd
                 )
 
         _ ->
@@ -74,18 +74,18 @@ handleSizeMsg msg model =
             )
 
 
-handleGameMsg : Game.Msg -> Model -> ( Model, Cmd Msg )
-handleGameMsg msg model =
+handleGridMsg : Grid.Msg -> Model -> ( Model, Cmd Msg )
+handleGridMsg msg model =
     case model.game of
         Active game ->
             let
                 ( submodel, subcmd ) =
-                    Game.update msg game
+                    Grid.update msg game
             in
-                if Game.allOff submodel.grid then
+                if Grid.allOff submodel.grid then
                     ( { model | game = Victory submodel.moves }, Cmd.none )
                 else
-                    ( { model | game = Active submodel }, Cmd.map GameMsg subcmd )
+                    ( { model | game = Active submodel }, Cmd.map GridMsg subcmd )
 
         _ ->
             ( model, Cmd.none )
@@ -102,7 +102,7 @@ view model =
             Html.map SizeMsg (IntPicker.view model.size)
 
         Active submodel ->
-            Html.map GameMsg (Game.view submodel)
+            Html.map GridMsg (Grid.view submodel)
 
         Victory moves ->
             div [] [ text <| "Victory in " ++ (toString moves) ++ " moves!" ]

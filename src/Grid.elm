@@ -1,4 +1,4 @@
-port module Game exposing (..)
+port module Grid exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -183,11 +183,3 @@ cellAsHtml coord state =
         ]
         [ text "Click Me!" ]
 
-
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none

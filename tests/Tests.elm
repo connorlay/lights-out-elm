@@ -1,6 +1,6 @@
 module Tests exposing (..)
 
-import Game exposing (..)
+import Grid exposing (..)
 import Test exposing (..)
 import Fuzz exposing (..)
 import Expect
@@ -11,13 +11,13 @@ import Maybe exposing (..)
 
 all : Test
 all =
-    describe "Game"
+    describe "Grid"
         [ describe "Creating the model"
             [ fuzz (intRange 4 10) "Grid should always be NxN" <|
                 \n ->
                     let
                         model =
-                            Game.model n
+                            Grid.model n
 
                         xLen =
                             model
@@ -41,13 +41,13 @@ all =
                             [ True, False, False, True, True, False, True, True, True ]
 
                         expected =
-                            Game.as2x2Array
+                            Grid.as2x2Array
                                 [ [ True, False, False ]
                                 , [ True, True, False ]
                                 , [ True, True, True ]
                                 ]
                     in
-                        Expect.equal expected <| Game.createGrid bools
+                        Expect.equal expected <| Grid.createGrid bools
             ]
         , describe "Finding cells to toggle"
             [ test "A set of coords to toggle should be returned" <|
@@ -56,7 +56,7 @@ all =
                         expected =
                             Set.fromList [ ( 1, 1 ), ( 0, 1 ), ( 1, 0 ), ( 2, 1 ), ( 1, 2 ) ]
                     in
-                        Expect.equal expected <| Game.neighbors ( 1, 1 )
+                        Expect.equal expected <| Grid.neighbors ( 1, 1 )
             ]
         , describe "Toggling cells in a grid"
             [ test "Cells should toggle based on coords in set" <|
@@ -67,18 +67,18 @@ all =
 
                         grid =
                             4
-                                |> Game.model
+                                |> Grid.model
                                 |> .grid
 
                         expected =
-                            Game.as2x2Array
+                            Grid.as2x2Array
                                 [ [ False, True, False, False ]
                                 , [ True, True, True, False ]
                                 , [ False, True, False, False ]
                                 , [ False, False, False, False ]
                                 ]
                     in
-                        Expect.equal expected <| Game.updateGrid grid coords
+                        Expect.equal expected <| Grid.updateGrid grid coords
             , test "Cells out of bounds should not toggle" <|
                 \() ->
                     let
@@ -87,18 +87,18 @@ all =
 
                         grid =
                             4
-                                |> Game.model
+                                |> Grid.model
                                 |> .grid
 
                         expected =
-                            Game.as2x2Array
+                            Grid.as2x2Array
                                 [ [ False, False, False, False ]
                                 , [ False, False, False, False ]
                                 , [ False, False, False, True ]
                                 , [ False, False, True, True ]
                                 ]
                     in
-                        Expect.equal expected <| Game.updateGrid grid coords
+                        Expect.equal expected <| Grid.updateGrid grid coords
             ]
         , describe "Victory detection" <|
             [ test "Grid should be a victory if all cells are off" <|
@@ -106,19 +106,19 @@ all =
                     let
                         grid =
                             4
-                                |> Game.model
+                                |> Grid.model
                                 |> .grid
                     in
-                        Expect.true "Grid is a victory" <| Game.allOff grid
+                        Expect.true "Grid is a victory" <| Grid.allOff grid
             , test "Grid should not be a victory if any cells are on" <|
                 \() ->
                     let
                         grid =
                             4
-                                |> Game.model
+                                |> Grid.model
                                 |> .grid
-                                |> Game.toggleCell ( 0, 0 )
+                                |> Grid.toggleCell ( 0, 0 )
                     in
-                        Expect.false "Grid is not a victory" <| Game.allOff grid
+                        Expect.false "Grid is not a victory" <| Grid.allOff grid
             ]
         ]
