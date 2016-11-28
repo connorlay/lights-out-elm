@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Grid exposing (..)
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
+import Grid.Update exposing (..)
 import IntPicker exposing (..)
 
 type alias GridModel = Grid.Model.Model
@@ -84,9 +85,9 @@ handleGridMsg msg model =
         Active game ->
             let
                 ( submodel, subcmd ) =
-                    Grid.update msg game
+                    Grid.Update.update msg game
             in
-                if Grid.allOff submodel.grid then
+                if Grid.Update.allOff submodel.grid then
                     ( { model | game = Victory submodel.moves }, Cmd.none )
                 else
                     ( { model | game = Active submodel }, Cmd.map GridMsg subcmd )
