@@ -3,6 +3,7 @@ port module Grid.View exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Css exposing (backgroundColor, asPairs, rgb)
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 import Array exposing (..)
@@ -50,13 +51,10 @@ cellAsHtml : ( Int, Int ) -> Bool -> Html Msg
 cellAsHtml coord state =
     button
         [ onClick (ToggleCell coord)
-        , style
-            [ ( "backgroundColor"
-              , if state then
-                    "red"
-                else
-                    "gray"
-              )
-            ]
+        , styles [ backgroundColor (if state then rgb 255 255 56 else rgb 124 124 124)]
         ]
         [ text "Click Me!" ]
+
+styles : List Css.Mixin -> Html.Attribute msg
+styles =
+    Css.asPairs >> Html.Attributes.style
