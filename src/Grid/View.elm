@@ -3,7 +3,7 @@ port module Grid.View exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Css exposing (backgroundColor, asPairs, rgb)
+import Css exposing (solid, border2, borderRadius, vh, width, px, height, backgroundColor, asPairs, rgb, displayFlex, alignItems, center, property, maxWidth, pct)
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 import Array exposing (..)
@@ -23,10 +23,15 @@ type alias Grid =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ model |> .grid |> gridAsHtml
-        , text <| "Moves: " ++ (toString model.moves)
+    div
+        [ styles
+            [ displayFlex
+            , alignItems center
+            , Css.property "justify-content" "center"
+            , Css.height (vh 100)
+            ]
         ]
+        [ model |> .grid |> gridAsHtml ]
 
 
 gridAsHtml : Grid -> Html Msg
@@ -34,7 +39,10 @@ gridAsHtml grid =
     grid
         |> toIndexedList
         |> List.foldr (\row acc -> (rowAsHtml row) :: acc) []
-        |> div []
+        |> div
+            [ styles
+                [ maxWidth (pct 50) ]
+            ]
 
 
 rowAsHtml : ( Int, Array Bool ) -> Html Msg
@@ -51,9 +59,21 @@ cellAsHtml : ( Int, Int ) -> Bool -> Html Msg
 cellAsHtml coord state =
     button
         [ onClick (ToggleCell coord)
-        , styles [ backgroundColor (if state then rgb 255 255 56 else rgb 124 124 124)]
+        , styles
+            [ backgroundColor
+                (if state then
+                    rgb 255 255 56
+                 else
+                    rgb 124 124 124
+                )
+            , Css.width (px 100)
+            , Css.height (px 100)
+            , border2 (px 0) solid
+            , borderRadius (px 15)
+            ]
         ]
         [ text "Click Me!" ]
+
 
 styles : List Css.Mixin -> Html.Attribute msg
 styles =
