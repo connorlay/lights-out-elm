@@ -3,7 +3,7 @@ port module Grid.View exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Css exposing (solid, border2, borderRadius, vh, width, px, height, backgroundColor, asPairs, rgb, displayFlex, alignItems, center, property, maxWidth, pct)
+import Css exposing (margin, solid, border, borderRadius, vh, width, px, height, backgroundColor, asPairs, rgb, displayFlex, alignItems, center, property, maxWidth, pct)
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 import Array exposing (..)
@@ -68,11 +68,11 @@ cellAsHtml coord state =
                 )
             , Css.width (px 100)
             , Css.height (px 100)
-            , border2 (px 0) solid
+            , border (px 0)
             , borderRadius (px 15)
+            , margin (px 2)
             ]
-        ]
-        [ text "Click Me!" ]
+        ] []
 
 
 styles : List Css.Mixin -> Html.Attribute msg
