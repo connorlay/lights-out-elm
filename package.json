@@ -12,7 +12,8 @@
   "scripts": {
     "start": "electron .",
     "build": "elm make ./src/*.elm --output ./build/elm.js",
-    "test": "elm test"
+    "test": "elm test",
+    "clean" : "rm -rf ./elm-stuff && rm -rf ./tests/elm-stuff"
   },
   "repository": {
     "type": "git",

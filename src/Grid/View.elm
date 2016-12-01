@@ -72,7 +72,8 @@ cellAsHtml coord state =
             , borderRadius (px 15)
             , margin (px 2)
             ]
-        ] []
+        ]
+        []
 
 
 styles : List Css.Mixin -> Html.Attribute msg
