@@ -3,7 +3,7 @@ port module Grid.View exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Css exposing (margin, solid, border, borderRadius, vh, width, px, height, backgroundColor, asPairs, rgb, displayFlex, alignItems, center, property, maxWidth, pct)
+import Css exposing (float, left, margin, solid, border, borderRadius, vh, width, px, height, backgroundColor, asPairs, rgb, displayFlex, alignItems, center, property, maxWidth, pct)
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 import Array exposing (..)
@@ -57,7 +57,7 @@ rowAsHtml ( row, cells ) =
 
 cellAsHtml : ( Int, Int ) -> Bool -> Html Msg
 cellAsHtml coord state =
-    button
+    div
         [ onClick (ToggleCell coord)
         , styles
             [ backgroundColor
@@ -71,6 +71,7 @@ cellAsHtml coord state =
             , border (px 0)
             , borderRadius (px 15)
             , margin (px 2)
+            , float left
             ]
         ]
         []
