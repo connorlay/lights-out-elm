@@ -3,7 +3,31 @@ port module Grid.View exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Css exposing (float, left, margin, solid, border, borderRadius, vh, width, px, height, backgroundColor, asPairs, rgb, displayFlex, alignItems, center, property, maxWidth, pct)
+import Css
+    exposing
+        ( float
+        , left
+        , margin
+        , solid
+        , border
+        , borderRadius
+        , vh
+        , width
+        , px
+        , height
+        , backgroundColor
+        , asPairs
+        , rgb
+        , displayFlex
+        , alignItems
+        , center
+        , property
+        , maxWidth
+        , pct
+        , maxHeight
+        , verticalAlign
+        , top
+        )
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 import Array exposing (..)
@@ -21,16 +45,14 @@ type alias Grid =
     Grid.Model.Grid
 
 
+
+-- VIEW
+
+
 view : Model -> Html Msg
 view model =
     div
-        [ styles
-            [ displayFlex
-            , alignItems center
-            , Css.property "justify-content" "center"
-            , Css.height (vh 100)
-            ]
-        ]
+        [ viewCss ]
         [ model |> .grid |> gridAsHtml ]
 
 
@@ -57,24 +79,40 @@ rowAsHtml ( row, cells ) =
 
 cellAsHtml : ( Int, Int ) -> Bool -> Html Msg
 cellAsHtml coord state =
-    div
-        [ onClick (ToggleCell coord)
-        , styles
-            [ backgroundColor
-                (if state then
-                    rgb 255 255 56
-                 else
-                    rgb 124 124 124
-                )
-            , Css.width (px 100)
-            , Css.height (px 100)
-            , border (px 0)
-            , borderRadius (px 15)
-            , margin (px 2)
-            , float left
-            ]
+    div [ onClick (ToggleCell coord), cellCss state ] []
+
+
+
+-- STYLE
+
+
+viewCss : Html.Attribute Msg
+viewCss =
+    styles
+        [ displayFlex
+        , alignItems center
+        , Css.property "justify-content" "center"
+        , Css.height (pct 100)
+        , Css.backgroundColor (rgb 23 48 68)
         ]
-        []
+
+
+cellCss : Bool -> Html.Attribute msg
+cellCss state =
+    styles
+        [ backgroundColor
+            (if state then
+                rgb 255 255 56
+             else
+                rgb 124 124 124
+            )
+        , Css.width (px 100)
+        , Css.height (px 100)
+        , border (px 0)
+        , borderRadius (px 15)
+        , margin (px 2)
+        , float left
+        ]
 
 
 styles : List Css.Mixin -> Html.Attribute msg
