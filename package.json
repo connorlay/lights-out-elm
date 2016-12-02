@@ -7,22 +7,24 @@
   "devDependencies": {
     "electron": "^1.4.6",
     "elm": "^0.18.0",
+    "elm-css": "^0.6.0",
     "elm-test": "^0.18.0"
   },
   "scripts": {
     "start": "electron .",
     "build": "elm make ./src/*.elm --output ./build/elm.js && elm-css ./src/Stylesheets.elm",
     "test": "elm test",
-    "clean" : "rm -rf ./elm-stuff && rm -rf ./tests/elm-stuff"
+    "clean": "rm -rf ./elm-stuff && rm -rf ./tests/elm-stuff"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/connorlay/lights-out-elm.git"
   },
   "keywords": [
-    "mtg",
+    "lights-out",
+    "elm",
     "electron"
   ],
   "author": "Connor Lay",
   "license": "ISC"
-  }
+}

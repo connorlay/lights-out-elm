@@ -8,6 +8,14 @@ import Grid.Message exposing (..)
 import Grid.Update exposing (..)
 import Grid.View exposing (..)
 import IntPicker exposing (..)
+import Css
+    exposing
+        ( property
+        , textAlign
+        , center
+        , color
+        )
+import Colors exposing (..)
 
 
 type alias GridModel =
@@ -23,7 +31,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = subscriptions
+        , subscriptions = \_ -> Sub.none
         }
 
 
@@ -110,7 +118,17 @@ view : Model -> Html Msg
 view model =
     case model.game of
         Inactive ->
-            Html.map SizeMsg (IntPicker.view model.size)
+            div []
+                [ div
+                    [ styles
+                        [ Css.property "font-size" "8em"
+                        , textAlign center
+                        , Css.color darkBlue
+                        ]
+                    ]
+                    [ text "Lights Out!" ]
+                , Html.map SizeMsg (IntPicker.view model.size)
+                ]
 
         Active submodel ->
             Html.map GridMsg (Grid.View.view submodel)
@@ -119,10 +137,6 @@ view model =
             div [] [ text <| "Victory in " ++ (toString moves) ++ " moves!" ]
 
 
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
+styles : List Css.Mixin -> Html.Attribute msg
+styles =
+    Css.asPairs >> Html.Attributes.style

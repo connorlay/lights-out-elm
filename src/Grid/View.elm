@@ -31,6 +31,7 @@ import Css
 import Grid.Model exposing (..)
 import Grid.Message exposing (..)
 import Array exposing (..)
+import Colors exposing (..)
 
 
 type alias Msg =
@@ -93,7 +94,6 @@ viewCss =
         , alignItems center
         , Css.property "justify-content" "center"
         , Css.height (pct 100)
-        , Css.backgroundColor (rgb 23 48 68)
         ]
 
 
@@ -102,15 +102,15 @@ cellCss state =
     styles
         [ backgroundColor
             (if state then
-                rgb 255 255 56
+                yellow
              else
-                rgb 124 124 124
+                darkGray
             )
         , Css.width (px 100)
         , Css.height (px 100)
         , border (px 0)
-        , borderRadius (px 15)
-        , margin (px 2)
+        , borderRadius (px 1)
+        , margin (px 3)
         , float left
         ]
 
