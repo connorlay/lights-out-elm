@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "electron .",
-    "build": "elm make ./src/*.elm --output ./build/elm.js",
+    "build": "elm make ./src/*.elm --output ./build/elm.js && elm-css ./src/Stylesheets.elm",
     "test": "elm test",
     "clean" : "rm -rf ./elm-stuff && rm -rf ./tests/elm-stuff"
   },
